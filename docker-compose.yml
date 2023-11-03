@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  health-software-backend:
+    container_name: health-software-backend
+    image: health-software-backend
+    build:
+      context: .
+      dockerfile: ./.setup/build/Dockerfile
+      target: development
+    command: npm run start:dev
+    env_file:
+      - .env
+    expose:
+      - 3000
+      - 9229
+    ports:
+      - 3000:3000
+      - 9229:9229
+    networks:
+      - health-software-network
+    volumes:
+      - .:/usr/src/app:rw
+
+  health-software-backend-mongo:
+    image: mongo:5.0.3
+    container_name: health-software-backend-mongo
+    volumes:
+      - "health-software-backend-mongo:/data/db:delegated"
+    ports:
+      - '27017:27017'
+    networks:
+      - health-software-network
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:latest
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+      - EDGE_PORT=4566
+      - DEBUG=${DEBUG-}
+      - PERSISTENCE=${PERSISTENCE-}
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - EAGER_SERVICE_LOADING=1
+      - SERVICES=sns,ses,sqs
+    ports:
+      - '4566:4566'
+      - '4510-4559:4510-4559'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./.volumes/localstack:/var/lib/localstack
+      - ./.setup/docker:/docker-entrypoint-initaws.d/
+    networks:
+      - health-software-network
+
+networks:
+  health-software-network:
+    external: true
+
+volumes:
+  health-software-backend-mongo:
+    driver: local
