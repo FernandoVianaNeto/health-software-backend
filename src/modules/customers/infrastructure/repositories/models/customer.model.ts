@@ -10,7 +10,7 @@ export class Customer extends Document {
   email: string;
 
   @Prop({ type: String, required: true })
-  bithDate: string;
+  birthDate: string;
 
   @Prop({ type: String, required: true })
   phoneNumber: string;

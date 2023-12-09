@@ -25,6 +25,8 @@
     "@nestjs/cqrs": "^10.2.6",
     "@nestjs/mongoose": "^10.0.2",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^7.1.16",
+    "class-validator": "^0.14.0",
     "cqrs": "^3.1.0",
     "mongoose": "^8.0.0",
     "reflect-metadata": "^0.1.13",
