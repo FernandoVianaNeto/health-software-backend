@@ -7,6 +7,7 @@ import { Model } from 'mongoose';
 import { Worker } from './models/worker.model';
 import * as _ from 'lodash';
 import { GetWorkerQuery } from '@module/workers/application/queries/get-worker.query';
+import { SetWorkerAvailableCommand } from '@module/workers/application/commands/set-worker-available.command';
 
 @Injectable()
 export class MongoDBWorkerRepository
@@ -44,5 +45,16 @@ export class MongoDBWorkerRepository
     };
 
     return this.workerModel.find(filter);
+  }
+
+  async updateAvailableStatus(
+    command: SetWorkerAvailableCommand,
+  ): Promise<Worker> {
+    const { available, workerId } = command;
+
+    return this.workerModel.findOneAndUpdate(
+      { _id: workerId },
+      { available: available },
+    );
   }
 }

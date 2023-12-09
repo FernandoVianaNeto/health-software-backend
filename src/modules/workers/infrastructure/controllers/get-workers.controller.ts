@@ -6,9 +6,9 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { ICommand } from '@application/command.interface';
 import { GetWorkersRequest } from './requests/get-workers.request';
 import { GetWorkerQuery } from '@module/workers/application/queries/get-worker.query';
+import { IQuery } from '@application/query.interface';
 
 @Controller('/worker')
 @ApiTags('Workers')
@@ -27,7 +27,7 @@ export class GetWorkersController {
   @HttpCode(200)
   @Get('/list')
   async list(@Query() query: GetWorkersRequest): Promise<Worker[]> {
-    return this.queryBus.execute<ICommand, Worker[]>(
+    return this.queryBus.execute<IQuery, Worker[]>(
       new GetWorkerQuery(
         query.name,
         query.occupation,
