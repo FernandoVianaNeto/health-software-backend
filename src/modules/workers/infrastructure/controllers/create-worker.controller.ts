@@ -7,13 +7,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ICommand } from '@application/command.interface';
-import { CreateCustomerRequest } from './requests/create-customer.request';
-import { CreateCustomerCommand } from '@module/customers/application/commands/create-customer.command';
+import { CreateWorkerCommand } from '@module/workers/application/commands/create-worker.command';
+import { CreateWorkerRequest } from './requests/create-worker.request';
 
-@Controller('/customer')
-@ApiTags('Customer')
+@Controller('/worker')
+@ApiTags('Workers')
 @ApiBearerAuth()
-export class CreateCustomerController {
+export class CreateWorkerController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @ApiOperation({
@@ -26,13 +26,14 @@ export class CreateCustomerController {
   })
   @HttpCode(204)
   @Post('/create')
-  async create(@Body() body: CreateCustomerRequest): Promise<void> {
+  async create(@Body() body: CreateWorkerRequest): Promise<void> {
     return this.commandBus.execute<ICommand, void>(
-      new CreateCustomerCommand(
+      new CreateWorkerCommand(
         body.name,
         body.email,
         body.birthDate,
         body.phoneNumber,
+        body.occupation,
       ),
     );
   }
