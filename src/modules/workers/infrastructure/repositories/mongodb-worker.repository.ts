@@ -5,6 +5,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Worker } from './models/worker.model';
+import * as _ from 'lodash';
+import { GetWorkerQuery } from '@module/workers/application/queries/get-worker.query';
 
 @Injectable()
 export class MongoDBWorkerRepository
@@ -19,7 +21,8 @@ export class MongoDBWorkerRepository
   }
 
   async createWorker(workerInfo: CreateWorkerCommand): Promise<Worker> {
-    const { birthDate, email, name, phoneNumber, occupation } = workerInfo;
+    const { birthDate, email, name, phoneNumber, occupation, tags } =
+      workerInfo;
 
     return this.workerModel.create({
       name: name,
@@ -27,6 +30,19 @@ export class MongoDBWorkerRepository
       phoneNumber: phoneNumber,
       birthDate: birthDate,
       occupation: occupation,
+      tags: tags,
     });
+  }
+
+  async getWorkers(filters: GetWorkerQuery): Promise<Worker[]> {
+    const { name, occupation, available } = filters;
+
+    const filter = {
+      ...(!_.isUndefined(name) && { name: name }),
+      ...(!_.isUndefined(occupation) && { occupation: occupation }),
+      ...(!_.isUndefined(available) && { available: available }),
+    };
+
+    return this.workerModel.find(filter);
   }
 }

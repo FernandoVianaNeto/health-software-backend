@@ -7,6 +7,7 @@ export class CreateWorkerCommand extends ICommand {
     public birthDate: string,
     public phoneNumber: string,
     public occupation: string,
+    public tags: string,
   ) {
     super();
   }

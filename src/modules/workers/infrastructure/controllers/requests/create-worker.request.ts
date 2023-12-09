@@ -1,4 +1,3 @@
-import { CreateWorkerCommand } from '@module/workers/application/commands/create-worker.command';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
@@ -48,13 +47,12 @@ export class CreateWorkerRequest {
   })
   occupation: string;
 
-  public toDomain(): CreateWorkerCommand {
-    return new CreateWorkerCommand(
-      this.name,
-      this.email,
-      this.birthDate,
-      this.phoneNumber,
-      this.occupation,
-    );
-  }
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    name: 'tags',
+    required: true,
+    description: 'Worker tags',
+  })
+  tags: string;
 }

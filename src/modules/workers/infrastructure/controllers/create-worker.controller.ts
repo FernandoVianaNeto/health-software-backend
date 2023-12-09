@@ -34,6 +34,7 @@ export class CreateWorkerController {
         body.birthDate,
         body.phoneNumber,
         body.occupation,
+        body.tags,
       ),
     );
   }
